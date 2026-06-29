@@ -1,0 +1,52 @@
+# Hybrid Markdown Converter
+
+A scalable file-to-Markdown conversion framework.
+
+## Supported formats
+
+| Extension | Converter |
+|-----------|-----------|
+| `.docx` | MarkItDown |
+| `.html`, `.htm` | MarkItDown |
+| `.pptx` | MarkItDown |
+| `.xlsx`, `.xlsm`, `.xls` | MarkItDown |
+| `.pdf` | PyMuPDF4LLM (long text-only) or MarkItDown (short/image-heavy) |
+
+The PDF converter automatically selects the best backend based on page count and image content.
+
+## Setup
+
+```bash (terminal)
+python -m venv .venv
+.venv\Scripts\activate
+pip install -e .
+```
+
+## Usage
+
+```bash (terminal)
+# Convert all files in ./input to ./output (mirrors folder structure)
+md-convert
+
+# Convert a single file
+md-convert path/to/file.pdf
+
+# Convert a folder to a specific output directory
+md-convert path/to/folder -o path/to/output
+
+# Raise errors instead of writing failure placeholders
+md-convert --strict
+```
+
+## Output
+
+- Converted files are written as `.md` in `./output`, mirroring the input folder structure.
+- A `conversion_manifest.jsonl` file is written alongside the output, logging each conversion with status, converter used, warnings, and errors.
+- Files that fail to convert produce an empty `.._failed_to_convert.md` placeholder (unless `--strict` is passed).
+
+## Adding a new converter
+
+1. Create a class that inherits from `BaseConverter` in `src/md_converter/converters/`.
+2. Set `supported_extensions` and `name`.
+3. Implement `convert(self, input_path: Path) -> ConversionResult`.
+4. Register it in `ConverterRegistry` (`src/md_converter/core/registry.py`).

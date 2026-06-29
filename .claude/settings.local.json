@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem \"$env:LOCALAPPDATA\\\\Programs\\\\Git\" -Filter \"git.exe\" -Recurse -ErrorAction SilentlyContinue | Select-Object FullName)"
+    ]
+  }
+}
