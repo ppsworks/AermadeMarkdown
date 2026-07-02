@@ -11,6 +11,7 @@ requires-python = ">=3.10"
 dependencies = [
     "markitdown[all]",
     "pymupdf4llm",
+    "python-frontmatter",
 ]
 
 [project.scripts]
