@@ -9,7 +9,7 @@ description = "A scalable file-to-Markdown conversion framework for LLM-friendly
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "markitdown[docx,pdf,pptx,xlsx]",
+    "markitdown[all]",
     "pymupdf4llm",
 ]
 

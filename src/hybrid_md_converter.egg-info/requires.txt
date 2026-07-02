@@ -1,2 +1,2 @@
-markitdown[docx,pdf,pptx,xlsx]
+markitdown[all]
 pymupdf4llm

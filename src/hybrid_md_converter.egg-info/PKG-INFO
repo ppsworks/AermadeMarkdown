@@ -4,12 +4,12 @@ Version: 0.1.0
 Summary: A scalable file-to-Markdown conversion framework for LLM-friendly document mirrors.
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
-Requires-Dist: markitdown[docx,pdf,pptx,xlsx]
+Requires-Dist: markitdown[all]
 Requires-Dist: pymupdf4llm
 
-# Hybrid Markdown Converter
+# AermadeMarkdown
 
-A scalable file-to-Markdown conversion framework.
+Convert office documents, PDFs, and HTML files to Markdown. Designed for bulk conversion of project libraries into AI-ready markdown files.
 
 ## Supported formats
 
@@ -21,7 +21,7 @@ A scalable file-to-Markdown conversion framework.
 | `.xlsx`, `.xlsm`, `.xls` | MarkItDown |
 | `.pdf` | PyMuPDF4LLM (long text-only) or MarkItDown (short/image-heavy) |
 
-The PDF converter automatically selects the best backend based on page count and image content.
+The PDF converter automatically selects the best backend based on page count and image density.
 
 ## Setup
 
@@ -34,7 +34,7 @@ pip install -e .
 ## Usage
 
 ```bash
-# Convert all files in ./input to ./output (mirrors folder structure)
+# Convert all files in ./input to ./output
 md-convert
 
 # Convert a single file
@@ -43,19 +43,37 @@ md-convert path/to/file.pdf
 # Convert a folder to a specific output directory
 md-convert path/to/folder -o path/to/output
 
+# Inject YAML frontmatter into each output file
+md-convert --frontmatter
+
 # Raise errors instead of writing failure placeholders
 md-convert --strict
 ```
 
 ## Output
 
-- Converted files are written as `.md` in `./output`, mirroring the input folder structure.
-- A `conversion_manifest.jsonl` file is written alongside the output, logging each conversion with status, converter used, warnings, and errors.
-- Files that fail to convert produce an empty `.._failed_to_convert.md` placeholder (unless `--strict` is passed).
+Each converted file is written as `.md`, mirroring the input folder structure. Alongside the output, a `conversion_manifest.jsonl` log is written with the status, converter used, warnings, and errors for each file. Files that fail produce an empty `_failed_to_convert.md` placeholder unless `--strict` is passed.
 
-## Adding a new converter
+## Frontmatter
 
-1. Create a class that inherits from `BaseConverter` in `src/md_converter/converters/`.
+Pass `--frontmatter` to prepend YAML metadata to each output file:
+
+```yaml
+---
+converted_at: '2026-06-29T05:33:16+00:00'
+converter: html_converter
+source: report.html
+source_path: C:\path\to\report.html
+source_type: .html
+title: Q3 Cost Report
+---
+```
+
+Fields: `source`, `source_path`, `source_type`, `converter`, `converted_at`. `title` is included when extractable from the source. `warnings` is included if the conversion produced any.
+
+## Adding a converter
+
+1. Create a class inheriting from `BaseConverter` in `src/md_converter/converters/`.
 2. Set `supported_extensions` and `name`.
 3. Implement `convert(self, input_path: Path) -> ConversionResult`.
-4. Register it in `ConverterRegistry` (`src/md_converter/core/registry.py`).
+4. Add an instance to `ConverterRegistry` in `src/md_converter/core/registry.py`.

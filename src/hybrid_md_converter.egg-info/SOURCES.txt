@@ -19,6 +19,7 @@ src/md_converter/converters/pdf_converter/__init__.py
 src/md_converter/converters/pdf_converter/markitdown.py
 src/md_converter/converters/pdf_converter/pymupdf.py
 src/md_converter/core/__init__.py
+src/md_converter/core/frontmatter.py
 src/md_converter/core/manifest.py
 src/md_converter/core/models.py
 src/md_converter/core/paths.py
