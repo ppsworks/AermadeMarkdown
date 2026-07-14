@@ -14,6 +14,8 @@ Convert office documents, PDFs, and HTML files to Markdown. Designed for bulk co
 
 The PDF converter automatically selects the best backend based on page count and image density.
 
+`.xlsm` files are converted as `.xlsx` — they share the same OOXML format, and any embedded macros are ignored.
+
 ## Setup
 
 ```bash
@@ -68,3 +70,5 @@ Fields: `source`, `source_path`, `source_type`, `converter`, `converted_at`. `ti
 2. Set `supported_extensions` and `name`.
 3. Implement `convert(self, input_path: Path) -> ConversionResult`.
 4. Add an instance to `ConverterRegistry` in `src/md_converter/core/registry.py`.
+
+For formats MarkItDown can handle, inherit from `MarkItDownConverter` instead and skip step 3. If MarkItDown doesn't recognize an extension but can read the format under another name, map it via `extension_aliases` (e.g. `XlsxConverter` sets `{".xlsm": ".xlsx"}`).
