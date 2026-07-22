@@ -1,4 +1,5 @@
 import argparse
+from collections import Counter
 from pathlib import Path
 
 from md_converter.core.frontmatter import inject_frontmatter
@@ -16,6 +17,9 @@ def _write_failed(
     output_path = build_output_path(input_path, output_dir, input_root, failed=True)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text("", encoding="utf-8")
+
+    succeeded_path = build_output_path(input_path, output_dir, input_root, failed=False)
+    succeeded_path.unlink(missing_ok=True)
 
     append_manifest_entry(
         output_dir=output_dir,
@@ -56,6 +60,9 @@ def convert_file(
 
     result.output_path = output_path
 
+    failed_path = build_output_path(input_path, output_dir, input_root, failed=True)
+    failed_path.unlink(missing_ok=True)
+
     append_manifest_entry(
         output_dir=output_dir,
         source_path=input_path,
@@ -93,9 +100,10 @@ def convert_directory(
     registry = ConverterRegistry()
     supported = set(registry.supported_extensions())
 
-    files = sorted(
-        f for f in input_dir.rglob("*")
-        if f.is_file() and f.suffix.lower() in supported
+    all_files = [f for f in input_dir.rglob("*") if f.is_file()]
+    files = sorted(f for f in all_files if f.suffix.lower() in supported)
+    skipped_exts = Counter(
+        f.suffix.lower() for f in all_files if f.suffix.lower() not in supported
     )
 
     if not files:
@@ -103,7 +111,13 @@ def convert_directory(
         print(f"Supported extensions: {', '.join(sorted(supported))}")
         return
 
-    print(f"Found {len(files)} file(s) to convert.\n")
+    print(f"Found {len(files)} file(s) to convert.")
+    if skipped_exts:
+        breakdown = ", ".join(
+            f"{ext or '(no ext)'}: {count}" for ext, count in sorted(skipped_exts.items())
+        )
+        print(f"Skipped {sum(skipped_exts.values())} file(s) with unsupported extensions ({breakdown}).")
+    print()
 
     succeeded = 0
     failed = 0
