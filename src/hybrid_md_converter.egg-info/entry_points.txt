@@ -1,2 +1,0 @@
-[console_scripts]
-md-convert = md_converter.main:main

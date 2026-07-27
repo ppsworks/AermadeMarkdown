@@ -11,11 +11,13 @@ def append_manifest_entry(
     converter_name: str | None = None,
     error: str | None = None,
     warnings: list[str] | None = None,
+    run_id: str | None = None,
 ) -> None:
     manifest_path = output_dir / "conversion_manifest.jsonl"
 
     entry = {
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+        "run_id": run_id,
         "source_path": str(source_path),
         "source_name": source_path.name,
         "source_extension": source_path.suffix.lower(),

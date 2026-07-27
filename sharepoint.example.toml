@@ -1,0 +1,48 @@
+# Copy this file to `sharepoint.toml` and fill in your values.
+# Secrets do NOT go here — they live in `.env` (AZURE_TENANT_ID / CLIENT_ID / CLIENT_SECRET).
+
+[graph]
+# Your SharePoint Online hostname (no "https://").
+hostname = "afgruppen.sharepoint.com"
+
+[destination]
+# The dedicated "aermade AI" site that collects all the Markdown mirrors.
+site_path = "/sites/AermadeAI"
+# Optional: destination document library name. Empty = the site's default library.
+library = ""
+# Optional: a prefix folder in the destination under which everything is mirrored.
+root_folder = ""
+
+# ---------------------------------------------------------------------------
+# One or more sources. Each source's files are mirrored to the destination as
+#   <root_folder>/<site name>/<library name>/<original folder path>/<file>.md
+# so the original site + library + folder structure is preserved.
+#
+# library:   ""  -> the site's default document library
+#            "*" -> every document library in the site
+#            "Name" -> one specific library
+# libraries: [...] explicit allowlist of library names; wins over `library`.
+#            Preferred for sites with mixed content — libraries added later are
+#            excluded by default instead of being swept in silently.
+# exclude:   [...] library names to skip, applied after the above selection
+# folder:    optional subfolder within the library to limit the scan
+# mirror_name: optional override for the top folder (default = the site's name)
+#
+# Scope can also be set per run with --source-site / --source-library /
+# --source-folder, which override the sources below entirely. Note that all
+# mirrors share the destination's permission set, whatever their source.
+# ---------------------------------------------------------------------------
+
+[[source]]
+site_path = "/sites/AERMADE"
+library = "*"
+
+[[source]]
+site_path = "/sites/Aermadeprosjekter"
+library = "*"
+
+# Example of scoping to a single library / subfolder instead of the whole site:
+# [[source]]
+# site_path = "/sites/AERMADE"
+# library = "Prosedyrer"
+# folder = "Rev A"
