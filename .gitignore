@@ -1,6 +1,9 @@
 .venv/
 __pycache__/
 *.pyc
+*.egg-info/
+build/
+dist/
 .env
 
 .claude/
@@ -8,6 +11,10 @@ __pycache__/
 
 input/
 output/
+
+sharepoint.toml
+sharepoint_state.json
+sharepoint_logs/
 
 *.log
 .DS_Store

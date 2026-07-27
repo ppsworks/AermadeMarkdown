@@ -12,10 +12,14 @@ dependencies = [
     "markitdown[all]",
     "pymupdf4llm",
     "python-frontmatter",
+    "msal",
+    "requests",
+    "python-dotenv",
 ]
 
 [project.scripts]
 md-convert = "md_converter.main:main"
+md-convert-sp = "md_converter.sharepoint.sync:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

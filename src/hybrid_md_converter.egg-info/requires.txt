@@ -1,2 +1,0 @@
-markitdown[all]
-pymupdf4llm
