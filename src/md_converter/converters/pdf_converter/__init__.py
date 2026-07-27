@@ -12,10 +12,10 @@ _TEXT_HEAVY_MIN_PAGES = 15
 
 
 def _is_text_heavy(path: Path) -> bool:
-    doc = fitz.open(str(path))
-    if len(doc) < _TEXT_HEAVY_MIN_PAGES:
-        return False
-    return not any(page.get_images() for page in doc)
+    with fitz.open(str(path)) as doc:
+        if len(doc) < _TEXT_HEAVY_MIN_PAGES:
+            return False
+        return not any(page.get_images() for page in doc)
 
 
 class PdfConverter(BaseConverter):
