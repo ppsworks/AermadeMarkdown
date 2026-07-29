@@ -204,8 +204,8 @@ md-convert path/to/file.pdf
 # Convert a folder to a specific output directory
 md-convert path/to/folder -o path/to/output
 
-# Inject YAML frontmatter into each output file
-md-convert --frontmatter
+# Skip the YAML frontmatter normally prepended to each output file
+md-convert --no-frontmatter
 
 # Raise errors instead of writing failure placeholders
 md-convert --strict
@@ -218,7 +218,7 @@ warnings, and errors for each file. Files that fail produce an empty
 
 ## Frontmatter
 
-Pass `--frontmatter` (either mode) to prepend YAML metadata to each output file:
+Both modes prepend YAML metadata to each output file by default; pass `--no-frontmatter` to skip it:
 
 ```yaml
 ---

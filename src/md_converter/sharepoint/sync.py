@@ -48,7 +48,7 @@ class RunContext:
     log_dir: Path
     state: dict = field(default_factory=dict)
     ensured_folders: set[str] = field(default_factory=set)
-    frontmatter: bool = False
+    frontmatter: bool = True
     force: bool = False
     dry_run: bool = False
     limit: int | None = None
@@ -408,9 +408,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--root-folder", help="Optional prefix folder in the destination")
 
     parser.add_argument(
-        "--frontmatter",
-        action="store_true",
-        help="Inject YAML frontmatter (source, converter, timestamp) into each file.",
+        "--no-frontmatter",
+        dest="frontmatter",
+        action="store_false",
+        help="Skip injecting YAML frontmatter (source, converter, timestamp) into each file.",
     )
     parser.add_argument(
         "--report",
