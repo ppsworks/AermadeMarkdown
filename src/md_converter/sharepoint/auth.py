@@ -6,7 +6,7 @@ class GraphAuth:
 
     No user sign-in is involved: the app authenticates as itself with a client secret.
     The registered app must hold the required Graph *application* permission on the
-    target sites (see README — ``Sites.Selected`` is recommended).
+    target sites (see README, ``Sites.Selected`` is recommended).
     """
 
     _SCOPES = ["https://graph.microsoft.com/.default"]

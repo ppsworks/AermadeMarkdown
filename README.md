@@ -110,7 +110,7 @@ It also prints every library in each source site, marked `+` (will be mirrored) 
 ### 4. Run
 
 ```bash
-# See what would happen — lists each source file and its destination mirror path
+# See what would happen: lists each source file and its destination mirror path
 md-convert-sp --dry-run
 
 # Convert just the first file end-to-end (safe first test)
@@ -131,7 +131,7 @@ through a big library piecemeal and the mirror stays consistent with itself.
 
 ### Selecting sources
 
-Sources live in `sharepoint.toml` — see `sharepoint.example.toml`. Each `[[source]]` sets a
+Sources live in `sharepoint.toml` (see `sharepoint.example.toml`). Each `[[source]]` sets a
 `site_path` plus a library selection:
 
 | Key | Meaning |
@@ -163,15 +163,15 @@ Every file, converted or failed or skipped, is recorded in
 `sharepoint_logs/conversion_manifest.jsonl` and tagged with a `run_id`. Each run ends with a
 breakdown of anything that needs attention:
 
-- **unsupported** — the extension has no converter (grouped by extension)
-- **failed** — the file was handled but broke (grouped by error type)
-- **warned** — converted, but the converter flagged something
+- **unsupported**: the extension has no converter (grouped by extension)
+- **failed**: the file was handled but broke (grouped by error type)
+- **warned**: converted, but the converter flagged something
 
 That last category is the easy one to miss. A file that converts to nothing still uploads a
 valid but useless `.md`, and otherwise looks like a success.
 
 ```bash
-# Replay the last run's breakdown from the manifest — instant, no network
+# Replay the last run's breakdown from the manifest (instant, no network)
 md-convert-sp --report
 
 # Show every path rather than the first 40 of each category

@@ -19,8 +19,6 @@ class GraphClient:
         self._session = requests.Session()
         self._root_ids: dict[str, str] = {}
 
-    # -- low-level helpers -------------------------------------------------
-
     def _headers(self, extra: dict | None = None) -> dict:
         headers = {"Authorization": f"Bearer {self._auth.token()}"}
         if extra:
@@ -46,8 +44,6 @@ class GraphClient:
                 f"{GRAPH_BASE}/drives/{drive_id}/root"
             ).json()["id"]
         return self._root_ids[drive_id]
-
-    # -- site / drive resolution ------------------------------------------
 
     def get_site(self, hostname: str, site_path: str) -> dict:
         """Resolve a site by hostname + server-relative path; returns the site object
@@ -80,8 +76,6 @@ class GraphClient:
         raise ValueError(
             f"Document library '{library}' not found in site. Available: {available}"
         )
-
-    # -- reading -----------------------------------------------------------
 
     def walk_files(self, drive_id: str, folder: str = "") -> Iterator[dict]:
         """Yield every file (recursively) under ``folder`` in the given drive.
@@ -125,8 +119,6 @@ class GraphClient:
             f"{GRAPH_BASE}/drives/{drive_id}/items/{item_id}/content"
         ).content
 
-    # -- writing -----------------------------------------------------------
-
     def ensure_folder(self, drive_id: str, folder_path: str) -> str:
         """Create ``folder_path`` (nested, as needed); return the deepest folder's id."""
         parent_id = self._root_id(drive_id)
@@ -145,7 +137,7 @@ class GraphClient:
             headers=self._headers({"Content-Type": "application/json"}),
             json=body,
         )
-        if response.status_code == 409:  # already exists — fetch it by name
+        if response.status_code == 409:  # already exists, so fetch it by name
             existing = self._get(
                 f"{GRAPH_BASE}/drives/{drive_id}/items/{parent_id}:/{_encode(name)}"
             )
@@ -155,8 +147,8 @@ class GraphClient:
     def upload_text(self, drive_id: str, dest_path: str, text: str) -> dict:
         """Upload UTF-8 text to ``dest_path`` (drive-relative), overwriting if present.
 
-        The parent folder must already exist — call :meth:`ensure_folder` first.
-        Simple upload; suitable for small files such as Markdown (< 250 MB).
+        The parent folder must already exist, so call :meth:`ensure_folder` first.
+        Simple upload, suitable for small files such as Markdown (< 250 MB).
         """
         url = f"{GRAPH_BASE}/drives/{drive_id}/root:/{_encode(dest_path)}:/content"
         response = self._session.put(

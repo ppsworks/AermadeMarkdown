@@ -82,7 +82,7 @@ class EmlConverter(BaseConverter):
                 stream_info=StreamInfo(extension=".html"),
             )
             return result.text_content or "", None
-        except Exception as error:  # noqa: BLE001 — fall back to the raw HTML
+        except Exception as error:  # noqa: BLE001 (fall back to the raw HTML)
             return raw, f"Could not convert HTML body ({error}); kept raw HTML."
 
     @staticmethod
@@ -90,6 +90,6 @@ class EmlConverter(BaseConverter):
         try:
             return part.get_content()
         except (LookupError, UnicodeDecodeError):
-            # Unknown or mislabelled charset — decode leniently rather than fail.
+            # Unknown or mislabelled charset, so decode leniently rather than fail.
             payload = part.get_payload(decode=True) or b""
             return payload.decode("utf-8", errors="replace")
