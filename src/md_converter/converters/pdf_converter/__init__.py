@@ -7,7 +7,7 @@ from md_converter.converters.pdf_converter.markitdown import MarkitdownPdfConver
 from md_converter.converters.pdf_converter.pymupdf import PyMuPdfConverter
 from md_converter.core.models import ConversionResult
 
-# short/image-heavy → MarkItDown; long text-only → PyMuPDF
+# short/image-heavy files use MarkItDown, long text-only ones use PyMuPDF
 _TEXT_HEAVY_MIN_PAGES = 15
 
 

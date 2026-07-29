@@ -1,5 +1,5 @@
 # Copy this file to `sharepoint.toml` and fill in your values.
-# Secrets do NOT go here — they live in `.env` (AZURE_TENANT_ID / CLIENT_ID / CLIENT_SECRET).
+# Secrets do NOT go here, they live in `.env` (AZURE_TENANT_ID / CLIENT_ID / CLIENT_SECRET).
 
 [graph]
 # Your SharePoint Online hostname (no "https://").
@@ -22,7 +22,7 @@ root_folder = ""
 #            "*" -> every document library in the site
 #            "Name" -> one specific library
 # libraries: [...] explicit allowlist of library names; wins over `library`.
-#            Preferred for sites with mixed content — libraries added later are
+#            Preferred for sites with mixed content, since libraries added later are
 #            excluded by default instead of being swept in silently.
 # exclude:   [...] library names to skip, applied after the above selection
 # folder:    optional subfolder within the library to limit the scan

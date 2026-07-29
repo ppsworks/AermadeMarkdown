@@ -15,7 +15,7 @@ from md_converter.sharepoint.config import SharePointConfig, Source, build_confi
 from md_converter.sharepoint.graph_client import GraphClient
 from md_converter.sharepoint.paths import build_mirror_path
 
-if TYPE_CHECKING:  # heavy imports — loaded lazily inside sync()
+if TYPE_CHECKING:  # heavy imports, loaded lazily inside sync()
     from md_converter.core.registry import ConverterRegistry
 
 
@@ -32,8 +32,8 @@ class Totals:
     # (path, error type, error message) plus a tally by error type.
     failed_types: Counter = field(default_factory=Counter)
     failed_items: list[tuple[str, str, str]] = field(default_factory=list)
-    # Files that converted but raised a warning (e.g. empty output) — these
-    # succeed silently otherwise, so they are worth surfacing separately.
+    # Files that converted but raised a warning (e.g. empty output) succeed
+    # silently otherwise, so they're worth surfacing separately.
     warning_kinds: Counter = field(default_factory=Counter)
     warned_items: list[tuple[str, list[str]]] = field(default_factory=list)
 
@@ -209,7 +209,7 @@ def _process_drive(
             print(f"Converted: {dest_path}")
             for warning in warnings:
                 print(f"           warning: {warning}")
-        except Exception as error:  # noqa: BLE001 — one bad file must not stop the run
+        except Exception as error:  # noqa: BLE001 (one bad file must not stop the run)
             totals.failed += 1
             totals.failed_types[type(error).__name__] += 1
             totals.failed_items.append(
@@ -258,7 +258,7 @@ def _report_warned(totals: Totals, list_paths: bool) -> None:
     breakdown = ", ".join(
         f"{kind} ({count})" for kind, count in totals.warning_kinds.most_common()
     )
-    print(f"{len(totals.warned_items)} file(s) converted with warnings — {breakdown}")
+    print(f"{len(totals.warned_items)} file(s) converted with warnings: {breakdown}")
 
     if list_paths:
         print()
@@ -278,7 +278,7 @@ def _report_failed(totals: Totals, list_paths: bool) -> None:
     breakdown = ", ".join(
         f"{name}: {count}" for name, count in totals.failed_types.most_common()
     )
-    print(f"Failures by error — {breakdown}")
+    print(f"Failures by error: {breakdown}")
 
     if list_paths:
         print()
@@ -298,7 +298,7 @@ def _report_unsupported(totals: Totals, list_paths: bool) -> None:
         f"{ext or '(no ext)'}: {count}"
         for ext, count in totals.unsupported_exts.most_common()
     )
-    print(f"Unsupported by extension — {breakdown}")
+    print(f"Unsupported by extension: {breakdown}")
 
     if list_paths:
         print()

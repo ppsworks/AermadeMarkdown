@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "hybrid-md-converter"
 version = "0.1.0"
-description = "A scalable file-to-Markdown conversion framework for LLM-friendly document mirrors."
+description = "Converts office documents, PDFs, email and HTML to Markdown for AI-agent grounding material."
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [

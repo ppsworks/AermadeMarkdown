@@ -1,9 +1,6 @@
-"""Connection diagnostic for the SharePoint integration.
-
-Tests each part of the setup separately — credentials, per-site read access, and
-write access to the destination — so a failure points at exactly one cause
-(usually a missing ``Sites.Selected`` grant rather than bad credentials).
-"""
+# Connection diagnostic for the SharePoint integration. Tests credentials, per-site
+# read access, and destination write access separately, so a failure points at one
+# cause (usually a missing Sites.Selected grant rather than bad credentials).
 
 from md_converter.sharepoint.auth import GraphAuth
 from md_converter.sharepoint.config import SharePointConfig, build_config
@@ -20,18 +17,18 @@ def _hint(error: Exception) -> str:
     text = str(error)
     if "403" in text:
         return (
-            "403 Forbidden — the app authenticated but has no access to this site. "
+            "403 Forbidden: the app authenticated but has no access to this site. "
             "This is the per-site Sites.Selected grant; ask IT to grant the app "
             "read (source) / write (destination) on this specific site."
         )
     if "404" in text:
         return (
-            "404 Not Found — the site path is probably wrong. Open the site in a "
+            "404 Not Found: the site path is probably wrong. Open the site in a "
             "browser and copy the part of the URL after the hostname "
             "(e.g. https://contoso.sharepoint.com/sites/AERMADE -> /sites/AERMADE)."
         )
     if "401" in text:
-        return "401 Unauthorized — check the tenant id, client id and secret."
+        return "401 Unauthorized: check the tenant id, client id and secret."
     return text
 
 
@@ -41,7 +38,7 @@ def _check_source(client: GraphClient, config: SharePointConfig, source) -> bool
     site_path = source.site_path
     try:
         site = client.get_site(config.hostname, site_path)
-    except Exception as error:  # noqa: BLE001 — diagnostic wants the reason, not a trace
+    except Exception as error:  # noqa: BLE001 (diagnostic wants the reason, not a trace)
         print(f"[{FAIL}] read  {site_path}")
         print(f"          {_hint(error)}")
         return False
@@ -105,9 +102,9 @@ def check(args) -> None:
     )
     try:
         auth.token()
-        print(f"[{OK}] credentials — token acquired\n")
+        print(f"[{OK}] credentials, token acquired\n")
     except Exception as error:  # noqa: BLE001
-        print(f"[{FAIL}] credentials — could not acquire a token")
+        print(f"[{FAIL}] credentials, could not acquire a token")
         print(f"          {error}\n")
         raise SystemExit(1)
 
@@ -124,6 +121,6 @@ def check(args) -> None:
         print(
             "Some checks failed. If credentials worked but sites returned 403, the "
             "app registration exists but is missing its per-site Sites.Selected "
-            "grants — that is a separate step from creating the app."
+            "grants; that's a separate step from creating the app."
         )
         raise SystemExit(1)

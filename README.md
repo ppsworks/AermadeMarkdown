@@ -5,10 +5,10 @@ for AI agents.
 
 The tool runs in two modes over a shared conversion core:
 
-- **[SharePoint mode](#sharepoint-mode-microsoft-graph)** (`md-convert-sp`) — reads files
+- **[SharePoint mode](#sharepoint-mode-microsoft-graph)** (`md-convert-sp`): reads files
   directly from SharePoint and writes Markdown mirrors back to a dedicated SharePoint
   site. This is the main path.
-- **[Local mode](#local-mode)** (`md-convert`) — converts files on disk, folder to folder.
+- **[Local mode](#local-mode)** (`md-convert`) converts files on disk, folder to folder.
   Useful for one-off files and for testing conversions without touching SharePoint.
 
 ## Supported formats
@@ -26,7 +26,7 @@ The tool runs in two modes over a shared conversion core:
 
 The PDF converter automatically selects the best backend based on page count and image density.
 
-`.xlsm` files are converted as `.xlsx` — they share the same OOXML format, and any embedded macros are ignored.
+`.xlsm` files are converted as `.xlsx`, since they share the same OOXML format; any embedded macros are ignored.
 
 Email output leads with the `From` / `To` / `Cc` / `Date` / `Subject` headers and lists attachment filenames, followed by the body. `.eml` prefers the plain-text part and falls back to converting the HTML alternative. Attachments themselves are not extracted or converted.
 
@@ -51,7 +51,7 @@ and writes the Markdown mirrors into a dedicated SharePoint site (e.g. *Aermade 
 file is mirrored as `<site>/<library>/<original folders>/<file>.md`, so the original site,
 library and folder structure is preserved.
 
-It authenticates **app-only** (client credentials) — no user sign-in — and downloads each
+It authenticates **app-only** (client credentials, no user sign-in) and downloads each
 file to a temp path just long enough to convert it locally. Nothing is written back to the
 source sites, and no file content leaves the machine except the finished Markdown.
 
@@ -62,14 +62,14 @@ Ask IT for an **Entra ID (Azure AD) app registration** with:
 1. Microsoft **Graph application permission `Sites.Selected`**, admin-consented.
 2. A **client secret** (note the expiry date).
 3. A per-site grant of **Read** on each source site and **Read/Write** on the destination
-   site (this is the `Sites.Selected` grant an admin performs — provide the site URLs for
+   site (this is the `Sites.Selected` grant an admin performs; provide the site URLs for
    all sites involved, e.g. `AERMADE`, `Aermade prosjekter`, and `Aermade AI`).
    `Sites.Selected` is least-privilege; `Sites.ReadWrite.All` is the broad fallback if
    `Sites.Selected` isn't available.
 
 They hand back three values: **Tenant ID, Client ID, Client secret**. Note that Azure also
-shows a *Secret ID* — that is a portal reference, not the credential; the tool needs the
-secret **value**, which is shown only once when the secret is created.
+shows a *Secret ID*, which is just a portal reference, not the credential; the tool needs
+the secret **value**, which is shown only once when the secret is created.
 
 ### 2. Configure
 
@@ -81,8 +81,8 @@ cp sharepoint.example.toml sharepoint.toml # hostname + source/destination sites
 Both files are git-ignored. `.env` holds the secrets; `sharepoint.toml` holds the
 (non-secret) site and library paths.
 
-Site paths are the part of the site URL after the hostname — open the site in a browser
-and copy it (`https://contoso.sharepoint.com/sites/AERMADE` → `/sites/AERMADE`). The URL
+Site paths are the part of the site URL after the hostname: open the site in a browser
+and copy it (`https://contoso.sharepoint.com/sites/AERMADE` -> `/sites/AERMADE`). The URL
 slug is often not identical to the site's display name.
 
 ### 3. Verify the connection
@@ -91,8 +91,8 @@ slug is often not identical to the site's display name.
 md-convert-sp --check
 ```
 
-`--check` tests each part separately — credentials, then read access per source site, then
-write access to the destination (by uploading and deleting a small probe file) — so a
+`--check` tests each part separately (credentials, then read access per source site, then
+write access to the destination by uploading and deleting a small probe file), so a
 failure identifies one cause:
 
 - **403** on a site while credentials succeed means the app registration is missing that
@@ -105,7 +105,7 @@ It also prints every library in each source site, marked `+` (will be mirrored) 
 ### 4. Run
 
 ```bash
-# See what would happen — lists each source file and its destination mirror path
+# See what would happen: lists each source file and its destination mirror path
 md-convert-sp --dry-run
 
 # Convert just the first file end-to-end (safe first test)
@@ -126,7 +126,7 @@ can be converted piecemeal over time and the mirror stays consistent with itself
 
 ### Selecting sources
 
-Sources live in `sharepoint.toml` — see `sharepoint.example.toml`. Each `[[source]]` sets a
+Sources live in `sharepoint.toml` (see `sharepoint.example.toml`). Each `[[source]]` sets a
 `site_path` plus a library selection:
 
 | Key | Meaning |
@@ -142,8 +142,8 @@ The same scoping is available per run via `--source-site`, `--source-library` an
 `--source-folder`, which override the config's sources entirely.
 
 Note that every mirror lands in one destination site under a single permission set, so a
-library restricted at the source becomes readable by anyone with access to the destination
-— or to an agent grounded on it. Scope deliberately, and curate the destination afterwards.
+library restricted at the source becomes readable by anyone with access to the destination,
+or to an agent grounded on it. Scope deliberately, and curate the destination afterwards.
 
 ### Incremental runs
 
@@ -153,19 +153,19 @@ modified files cost anything on a re-run. Use `--force` to ignore the cache.
 
 ### Reviewing a run
 
-Every file — converted, failed, or skipped — is recorded in
+Every file (converted, failed, or skipped) is recorded in
 `sharepoint_logs/conversion_manifest.jsonl`, tagged with a `run_id`. Each run ends with a
 breakdown of anything needing attention:
 
-- **unsupported** — the extension has no converter (grouped by extension)
-- **failed** — the file was handled but broke (grouped by error type)
-- **warned** — converted, but the converter flagged something
+- **unsupported**: the extension has no converter (grouped by extension)
+- **failed**: the file was handled but broke (grouped by error type)
+- **warned**: converted, but the converter flagged something
 
 The last category is the easiest to miss: a file that produces empty output still uploads
 a valid but useless `.md`, so it succeeds silently otherwise.
 
 ```bash
-# Replay the last run's breakdown from the manifest — instant, no network
+# Replay the last run's breakdown from the manifest (instant, no network)
 md-convert-sp --report
 
 # Show every path rather than the first 40 of each category
@@ -175,7 +175,7 @@ md-convert-sp --report --list-failed --list-unsupported --list-warned
 md-convert-sp --report --all-runs
 ```
 
-`--report` reads only the local manifest — no Graph calls, no credentials — so it returns
+`--report` reads only the local manifest (no Graph calls, no credentials), so it returns
 in under a second even when the run it describes took an hour. The same `--list-*` flags
 work during a live run.
 
@@ -186,7 +186,7 @@ finished run.
 ## Local mode
 
 `md-convert` converts files on disk. It shares every converter with SharePoint mode, which
-makes it the quickest way to test a conversion — no credentials, no network.
+makes it the quickest way to test a conversion: no credentials, no network.
 
 ```bash
 # Convert all files in ./input to ./output

@@ -1,9 +1,6 @@
-"""Offline report over the conversion manifest.
-
-Reads ``conversion_manifest.jsonl`` and summarises a run — no Graph calls, no
-credentials, no waiting. Useful after a long run to review what failed, what was
-skipped, and what converted to nothing.
-"""
+# Offline report over the conversion manifest. Reads conversion_manifest.jsonl and
+# summarises a run: no Graph calls, no credentials, no waiting. Useful after a long
+# run to review what failed, what was skipped, and what converted to nothing.
 
 import json
 from collections import Counter
@@ -88,7 +85,7 @@ def report(args) -> None:
                 e.get("source_extension", "") for e in unsupported
             ).most_common()
         )
-        print(f"\nUnsupported by extension — {breakdown}")
+        print(f"\nUnsupported by extension: {breakdown}")
         _section(
             "Unsupported files:",
             [e.get("source_path", "?") for e in unsupported],
@@ -102,7 +99,7 @@ def report(args) -> None:
                 _error_kind(e.get("error")) for e in failed
             ).most_common()
         )
-        print(f"\nFailures by error — {breakdown}")
+        print(f"\nFailures by error: {breakdown}")
         _section(
             "Failed files:",
             [f"{e.get('source_path', '?')}\n      {e.get('error', '')}" for e in failed],
@@ -116,7 +113,7 @@ def report(args) -> None:
                 w for e in warned for w in e.get("warnings", [])
             ).most_common()
         )
-        print(f"\nWarnings — {breakdown}")
+        print(f"\nWarnings: {breakdown}")
         _section(
             "Files converted with warnings:",
             [
@@ -131,7 +128,7 @@ def report(args) -> None:
     )
     if converters:
         print(
-            "\nConverters used — "
+            "\nConverters used: "
             + ", ".join(f"{name}: {count}" for name, count in converters.most_common())
         )
 
