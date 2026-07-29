@@ -38,7 +38,7 @@ def convert_file(
     input_path: Path,
     output_dir: Path,
     input_root: Path | None = None,
-    frontmatter: bool = False,
+    frontmatter: bool = True,
 ) -> Path:
     input_path = input_path.resolve()
     output_dir = output_dir.resolve()
@@ -89,7 +89,7 @@ def convert_directory(
     output_dir: Path,
     input_root: Path | None = None,
     fail_soft: bool = True,
-    frontmatter: bool = False,
+    frontmatter: bool = True,
 ) -> None:
     input_dir = input_dir.resolve()
     output_dir = output_dir.resolve()
@@ -159,9 +159,10 @@ def parse_args() -> argparse.Namespace:
         help="Raise errors instead of creating failed-conversion placeholders.",
     )
     parser.add_argument(
-        "--frontmatter",
-        action="store_true",
-        help="Inject YAML frontmatter (source, converter, timestamp) into each output file.",
+        "--no-frontmatter",
+        dest="frontmatter",
+        action="store_false",
+        help="Skip injecting YAML frontmatter (source, converter, timestamp) into output files.",
     )
 
     return parser.parse_args()
