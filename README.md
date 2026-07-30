@@ -15,7 +15,7 @@ Two modes share the same conversion core:
 
 | Extension | Converter |
 |-----------|-----------|
-| `.docx` | MarkItDown |
+| `.docx`, `.dotx`, `.docm` | MarkItDown |
 | `.html`, `.htm` | MarkItDown |
 | `.pptx` | MarkItDown |
 | `.xlsx`, `.xlsm`, `.xls` | MarkItDown |
@@ -26,8 +26,8 @@ Two modes share the same conversion core:
 
 The PDF converter picks its backend from page count and image density.
 
-`.xlsm` files are converted as `.xlsx`. It's the same OOXML format underneath, and any
-embedded macros are ignored.
+`.xlsm` files are converted as `.xlsx`, and `.dotx`/`.docm` files are converted as `.docx`.
+They're the same OOXML format underneath; embedded macros and template markers are ignored.
 
 Email output leads with the `From` / `To` / `Cc` / `Date` / `Subject` headers and lists
 attachment filenames, followed by the body. `.eml` prefers the plain-text part and falls
